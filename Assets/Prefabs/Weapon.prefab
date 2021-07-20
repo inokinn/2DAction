@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4461274880016605313}
   - component: {fileID: 6994753094532030912}
   - component: {fileID: 4804463477272608136}
+  - component: {fileID: 3577458988588639585}
   m_Layer: 6
   m_Name: WeaponPhysics
   m_TagString: Weapon
@@ -62,6 +63,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 120
   m_CollisionDetection: 0
+--- !u!114 &3577458988588639585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2536203997413151524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7c5266d7f2184a45a532616acdc9299, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4745571683951739945
 GameObject:
   m_ObjectHideFlags: 0
