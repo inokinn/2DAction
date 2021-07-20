@@ -20,8 +20,11 @@ public class FootView : MonoBehaviour
     /// <param name="other"></param>
     private void OnCollisionEnter(Collision other)
     {
-        _enterCount += 1;
-        this.PublishOnGround();
+        if (other.gameObject.tag != "Enemy")
+        {
+            _enterCount += 1;
+            this.PublishOnGround();
+        }
     }
 
     /// <summary>
@@ -30,8 +33,11 @@ public class FootView : MonoBehaviour
     /// <param name="other"></param>
     private void OnCollisionExit(Collision other)
     {
-        _enterCount -= 1;
-        this.PublishOnGround();
+        if (other.gameObject.tag != "Enemy")
+        {
+            _enterCount -= 1;
+            this.PublishOnGround();
+        }
     }
 
     /// <summary>
