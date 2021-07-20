@@ -61,6 +61,8 @@ public class PlayerView : MonoBehaviour
         // ジャンプボタンの入力
         this.UpdateAsObservable()
             .Where(_ => Input.GetButtonDown("Jump"))
+            .Where(_ => _isGround)
+            .ThrottleFirst(new System.TimeSpan(100 * TimeSpan.TicksPerMillisecond))
             .Subscribe(_ =>
             {
                 this.Jump();
@@ -117,7 +119,7 @@ public class PlayerView : MonoBehaviour
     private void Attack()
     {
         _animator.SetTrigger("attackStart");
-        GameObject weapon = Instantiate(_weapon) as GameObject;
+        GameObject weapon = Instantiate(_weapon).transform.Find("WeaponPhysics").gameObject as GameObject;
         weapon.transform.position = new Vector3(0, _WeaponY, 0) + transform.position + transform.forward * _WeaponForward;
         weapon.GetComponent<Rigidbody>().AddForce(gameObject.transform.forward * _WeaponForce);
         _audioSource.PlayOneShot(_weaponSound);
