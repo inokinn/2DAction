@@ -33,10 +33,10 @@ public class WeaponView : MonoBehaviour
     }
 
     /// <summary>
-    /// オブジェクトに衝突した際
+    /// オブジェクトが重なった際
     /// </summary>
     /// <param name="other"></param>
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
         Destroy(gameObject);
     }

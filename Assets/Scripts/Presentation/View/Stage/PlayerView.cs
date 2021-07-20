@@ -23,6 +23,10 @@ public class PlayerView : MonoBehaviour
     [SerializeField] private GameObject _foot;
     // 弾丸
     [SerializeField] private GameObject _weapon;
+    // ダメージ音
+    [SerializeField] private AudioClip _damageSound;
+    // ショット音
+    [SerializeField] private AudioClip _weaponSound;
 
     // ジャンプ中フラグ
     private bool _isGround = false;
@@ -32,6 +36,8 @@ public class PlayerView : MonoBehaviour
     private Rigidbody _rigitBody;
     // 接地判定用オブジェクトのスクリプト
     private FootView _footView;
+    // オーディオソース
+    private AudioSource _audioSource;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +45,7 @@ public class PlayerView : MonoBehaviour
         _animator = GetComponent<Animator>();
         _rigitBody = transform.GetComponent<Rigidbody>();
         _footView = _foot.GetComponent<FootView>();
+        _audioSource = GetComponent<AudioSource>();
 
         // 接地判定のイベント
         _footView.OnGroundChanged.Subscribe(isGround =>
@@ -113,5 +120,6 @@ public class PlayerView : MonoBehaviour
         GameObject weapon = Instantiate(_weapon) as GameObject;
         weapon.transform.position = new Vector3(0, _WeaponY, 0) + transform.position + transform.forward * _WeaponForward;
         weapon.GetComponent<Rigidbody>().AddForce(gameObject.transform.forward * _WeaponForce);
+        _audioSource.PlayOneShot(_weaponSound);
     }
 }

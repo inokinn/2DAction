@@ -6,7 +6,7 @@ using UnityEngine;
 public class CameraView : MonoBehaviour
 {
     // プレイヤーとカメラのデフォルト距離
-    private const float _CameraDistance = 6f;
+    private const float _CameraDistance = 12f;
 
     // プレイヤーのゲームオブジェクト
     [SerializeField] private GameObject _player;
