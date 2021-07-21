@@ -3,10 +3,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-/// <summary>
-/// プレイヤーを表すView
-/// </summary>
-public class PlayerView : MonoBehaviour
+public class PlayerPhysics : MonoBehaviour
 {
     // 弾丸のチカラ
     private const float _WeaponForce = 550.0f;
@@ -23,6 +20,8 @@ public class PlayerView : MonoBehaviour
     [SerializeField] private long _invincibleTime = 3000;
     // 接地判定オブジェクト
     [SerializeField] private GameObject _foot;
+    // 表示用オブジェクト
+    [SerializeField] private GameObject _playerView;
     // 弾丸
     [SerializeField] private GameObject _weapon;
     // AudioManagerオブジェクト
@@ -42,7 +41,7 @@ public class PlayerView : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _animator = GetComponent<Animator>();
+        _animator = _playerView.GetComponent<Animator>();
         _rigitBody = transform.GetComponent<Rigidbody>();
         _footView = _foot.GetComponent<FootView>();
         _audioManager = _audioManagerObj.GetComponent<AudioManager>();

@@ -16,13 +16,13 @@ public class EnemyView : MonoBehaviour
     [SerializeField] private int _maxHp = 3;
     // 無敵時間(ミリ秒)
     [SerializeField] private long _invincibleTime = 0;
-    // 敵のダメージ音
-    [SerializeField] private AudioClip _enemyDamageSound;
+    // AudioManagerオブジェクト
+    [SerializeField] private GameObject _audioManagerObj;
 
-    // オーディオソース
-    private AudioSource _audioSource;
     // リジッドボディ
     private Rigidbody _rigitBody;
+    // AudioManager
+    private AudioManager _audioManager;
 
     // 現在体力
     private int _currentHp;
@@ -35,8 +35,8 @@ public class EnemyView : MonoBehaviour
     /// </summary>
     void Start()
     {
-        _audioSource = GetComponent<AudioSource>();
         _rigitBody = transform.GetComponent<Rigidbody>();
+        _audioManager = _audioManagerObj.GetComponent<AudioManager>();
 
         _currentHp = _maxHp;
 
@@ -47,7 +47,7 @@ public class EnemyView : MonoBehaviour
             .Subscribe(other =>
             {
                 _currentHp -= 1;
-                _audioSource.PlayOneShot(_enemyDamageSound);
+                _audioManager.PlaySound(SoundType.EnemyDamage);
 
                 if (_currentHp <= 0)
                 {
