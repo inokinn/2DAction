@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// 弾丸の物理演算
+/// </summary>
 public class WeaponPhysics : MonoBehaviour
 {
     // 弾丸の距離的寿命
@@ -25,7 +28,7 @@ public class WeaponPhysics : MonoBehaviour
         // 一定の距離を離れたら消滅
         if (Vector3.Distance(transform.position, _startPosition) > _LongestDistance)
         {
-            Destroy(transform.parent.gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -36,6 +39,6 @@ public class WeaponPhysics : MonoBehaviour
     /// <param name="other">The Collision data associated with this collision.</param>
     void OnCollisionEnter(Collision other)
     {
-        Destroy(transform.parent.gameObject);
+        Destroy(gameObject);
     }
 }
