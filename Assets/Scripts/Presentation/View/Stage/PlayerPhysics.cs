@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
@@ -11,6 +12,10 @@ public class PlayerPhysics : MonoBehaviour
     private const float _WeaponForward = 0.6f;
     // 弾丸のY座標
     private const float _WeaponY = 1.0f;
+    // ノックバックのチカラ
+    private const float _KnockBackForce = 160.0f;
+    // ノックバックの時間(ミリ秒)
+    private const float _KnockBackTime = 400.0f;
 
     // 移動速度
     [SerializeField] private float _speed = 0.1f;
@@ -37,6 +42,16 @@ public class PlayerPhysics : MonoBehaviour
     private FootView _footView;
     // AudioManager
     private AudioManager _audioManager;
+    // 点滅中時間
+    private float _flashTime = 0;
+    // 無敵開始時間
+    private float _invincibleStartTime = 0;
+    // メッシュ1
+    private GameObject _mesh1;
+    // メッシュ2
+    private GameObject _mesh2;
+    // ダメージ中
+    private bool _isDamage = false;
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +60,8 @@ public class PlayerPhysics : MonoBehaviour
         _rigitBody = transform.GetComponent<Rigidbody>();
         _footView = _foot.GetComponent<FootView>();
         _audioManager = _audioManagerObj.GetComponent<AudioManager>();
+        _mesh1 = _playerView.transform.Find("Character1_Reference").gameObject;
+        _mesh2 = _playerView.transform.Find("mesh_root").gameObject;
 
         // 接地判定のイベント
         _footView.OnGroundChanged.Subscribe(isGround =>
@@ -61,6 +78,7 @@ public class PlayerPhysics : MonoBehaviour
         this.UpdateAsObservable()
             .Where(_ => Input.GetButtonDown("Jump"))
             .Where(_ => _isGround)
+            .Where(_ => !_isDamage)
             .ThrottleFirst(new System.TimeSpan(100 * TimeSpan.TicksPerMillisecond))
             .Subscribe(_ =>
             {
@@ -70,6 +88,7 @@ public class PlayerPhysics : MonoBehaviour
         // 攻撃ボタンの入力
         this.UpdateAsObservable()
             .Where(_ => Input.GetButtonDown("Fire1"))
+            .Where(_ => !_isDamage)
             .ThrottleFirst(new System.TimeSpan(300 * TimeSpan.TicksPerMillisecond))
             .Subscribe(_ =>
             {
@@ -78,12 +97,18 @@ public class PlayerPhysics : MonoBehaviour
             .AddTo(this);
 
         // 被弾イベント
-        this.OnTriggerEnterAsObservable()
+        _playerView.GetComponent<PlayerView>().OnTriggerEnterAsObservable()
             .Where(other => other.gameObject.tag == "Enemy")
             .ThrottleFirst(new System.TimeSpan(_invincibleTime * TimeSpan.TicksPerMillisecond))
             .Subscribe(other =>
             {
                 _audioManager.PlaySound(SoundType.PlayerDamage);
+                _isDamage = true;
+                StartCoroutine(FlashCoroutine());
+
+                // ノックバック
+                Vector3 distination = (transform.position - other.transform.position).normalized;
+                _rigitBody.AddForce(distination * 160);
             })
             .AddTo(this);
     }
@@ -104,7 +129,10 @@ public class PlayerPhysics : MonoBehaviour
 
         // キー入力に合わせてキャラクターを移動する
         Vector3 newPosition = transform.position + (new Vector3(addX, 0, 0) * Time.deltaTime);
-        _rigitBody.MovePosition(newPosition);
+        if (!_isDamage)
+        {
+            _rigitBody.MovePosition(newPosition);
+        }
         _animator.SetBool("walking", addX != 0);
         // 移動する方向に顔を向ける
         transform.LookAt(newPosition);
@@ -132,5 +160,42 @@ public class PlayerPhysics : MonoBehaviour
         weapon.transform.position = new Vector3(0, _WeaponY, 0) + transform.position + transform.forward * _WeaponForward;
         weapon.GetComponent<Rigidbody>().AddForce(gameObject.transform.forward * _WeaponForce);
         _audioManager.PlaySound(SoundType.Weapon);
+    }
+
+    /// <summary>
+    /// 点滅コルーチン
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator FlashCoroutine()
+    {
+        _invincibleStartTime = Time.time;
+        while (_invincibleTime / 1000 > Time.time - _invincibleStartTime)
+        {
+            yield return new WaitForEndOfFrame();
+
+            // ノックバック状態を解除
+            if (Time.time - _invincibleStartTime > _KnockBackTime / 1000)
+            {
+                _isDamage = false;
+            }
+
+            _flashTime += Time.deltaTime;
+            if (_flashTime > 0.025f)
+            {
+                _mesh1.SetActive(true);
+                _mesh2.SetActive(true);
+            }
+            else
+            {
+                _mesh1.SetActive(false);
+                _mesh2.SetActive(false);
+            }
+            if (_flashTime > 0.05f)
+            {
+                _flashTime = 0f;
+            }
+        }
+        _mesh1.SetActive(true);
+        _mesh2.SetActive(true);
     }
 }

@@ -628,6 +628,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 412b92d4feeb9c548bfa98f62c4d1022, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 412b92d4feeb9c548bfa98f62c4d1022, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -1280,6 +1284,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 100322, guid: 412b92d4feeb9c548bfa98f62c4d1022, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 100324, guid: 412b92d4feeb9c548bfa98f62c4d1022, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -1393,6 +1401,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 120
   m_CollisionDetection: 0
+--- !u!114 &971499502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 971499499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da47b7bfbe3323249a09a29c3b064d0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1773428102 &971499503
 ParentConstraint:
   m_ObjectHideFlags: 0
@@ -1861,7 +1881,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 6
   _jumpPower: 400
-  _invincibleTime: 3000
+  _invincibleTime: 1500
   _foot: {fileID: 363056950}
   _playerView: {fileID: 971499499}
   _weapon: {fileID: 50770714309332878, guid: 3c8b01a3b095c0f468b631f48c66f086, type: 3}
