@@ -16,6 +16,12 @@ public class PlayerPhysics : MonoBehaviour
     private const float _KnockBackForce = 160.0f;
     // ノックバックの時間(ミリ秒)
     private const float _KnockBackTime = 400.0f;
+    // プレイヤーの最大HP
+    private const int _MaxHP = 4;
+    public int MaxHP
+    {
+        get => _MaxHP;
+    }
 
     // 移動速度
     [SerializeField] private float _speed = 0.1f;
@@ -53,6 +59,17 @@ public class PlayerPhysics : MonoBehaviour
     // ダメージ中
     private bool _isDamage = false;
 
+    // 現在HP
+    private ReactiveProperty<int> _currentHP = new ReactiveProperty<int>();
+    public ReactiveProperty<int> CurrentHP
+    {
+        get => _currentHP;
+    }
+    // 死を通知するSubject
+    private Subject<bool> _deathSubject = new Subject<bool>();
+    // 死のイベント購読側
+    public IObservable<bool> Death => _deathSubject;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -62,6 +79,7 @@ public class PlayerPhysics : MonoBehaviour
         _audioManager = _audioManagerObj.GetComponent<AudioManager>();
         _mesh1 = _playerView.transform.Find("Character1_Reference").gameObject;
         _mesh2 = _playerView.transform.Find("mesh_root").gameObject;
+        _currentHP.Value = _MaxHP;
 
         // 接地判定のイベント
         _footView.OnGroundChanged.Subscribe(isGround =>
@@ -83,7 +101,8 @@ public class PlayerPhysics : MonoBehaviour
             .Subscribe(_ =>
             {
                 this.Jump();
-            });
+            })
+            .AddTo(this);
 
         // 攻撃ボタンの入力
         this.UpdateAsObservable()
@@ -97,18 +116,39 @@ public class PlayerPhysics : MonoBehaviour
             .AddTo(this);
 
         // 被弾イベント
-        _playerView.GetComponent<PlayerView>().OnTriggerEnterAsObservable()
+        _playerView.GetComponent<PlayerView>().OnTriggerStayAsObservable()
             .Where(other => other.gameObject.tag == "Enemy")
             .ThrottleFirst(new System.TimeSpan(_invincibleTime * TimeSpan.TicksPerMillisecond))
             .Subscribe(other =>
             {
-                _audioManager.PlaySound(SoundType.PlayerDamage);
-                _isDamage = true;
-                StartCoroutine(FlashCoroutine());
+                // ダメージを受けたことを通知
+                // 現状、ダメージは1で決め打ちにしてあるが将来的に攻撃によって変化させたい
+                _currentHP.Value -= 1;
 
-                // ノックバック
-                Vector3 distination = (transform.position - other.transform.position).normalized;
-                _rigitBody.AddForce(distination * 160);
+                // HPが0以下になったら死
+                if (0 >= _currentHP.Value)
+                {
+                    // 効果音
+                    _audioManager.PlaySound(SoundType.Death);
+                    gameObject.SetActive(false);
+
+                    // 死を通知
+                    _deathSubject.OnNext(true);
+                }
+                // HPが1以上あるならダメージエフェクト
+                else
+                {
+                    // 効果音
+                    _audioManager.PlaySound(SoundType.PlayerDamage);
+
+                    // 点滅
+                    _isDamage = true;
+                    StartCoroutine(FlashCoroutine());
+
+                    // ノックバック
+                    Vector3 distination = (transform.position - other.transform.position).normalized;
+                    _rigitBody.AddForce(distination * 160);
+                }
             })
             .AddTo(this);
     }
