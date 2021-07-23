@@ -325,7 +325,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 2
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -437,6 +437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 971e6a00944ef36499ec3b26dc66aa82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _pauseSound: {fileID: 8300000, guid: c106488ae3cf84445a7d59792936f13f, type: 3}
   _playerDamageSound: {fileID: 8300000, guid: 352d9000262eb474bbd468f9d891c901, type: 3}
   _weaponSound: {fileID: 8300000, guid: f17731042a94361408264f9f1cfd7228, type: 3}
   _enemyDamageSound: {fileID: 8300000, guid: d8abaca8861a09a4889f46c7618b69ed, type: 3}

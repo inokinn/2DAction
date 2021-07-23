@@ -128,6 +128,9 @@ public class PlayerPhysics : MonoBehaviour
                 // HPが0以下になったら死
                 if (0 >= _currentHP.Value)
                 {
+                    // BGMを停止
+                    _audioManager.AudioStop();
+
                     // 効果音
                     _audioManager.PlaySound(SoundType.Death);
                     gameObject.SetActive(false);
@@ -148,6 +151,25 @@ public class PlayerPhysics : MonoBehaviour
                     // ノックバック
                     Vector3 distination = (transform.position - other.transform.position).normalized;
                     _rigitBody.AddForce(distination * 160);
+                }
+            })
+            .AddTo(this);
+
+        // ポーズ
+        this.UpdateAsObservable()
+            .Where(_ => Input.GetButtonDown("Pause"))
+            .Subscribe(_ =>
+            {
+                Debug.Log("うんこ");
+                if (Time.timeScale == 0)
+                {
+                    Time.timeScale = 1;
+                    _audioManager.PlaySound(SoundType.Pause);
+                }
+                else
+                {
+                    Time.timeScale = 0;
+                    _audioManager.PlaySound(SoundType.Pause);
                 }
             })
             .AddTo(this);

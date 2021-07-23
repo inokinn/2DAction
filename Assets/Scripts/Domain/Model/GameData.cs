@@ -60,9 +60,9 @@ public class GameData
     {
         string dataPath = null;
 #if UNITY_EDITOR
-        dataPath = Application.dataPath + "/SaveDatas/save.bin";
+        dataPath = Application.dataPath + "/SaveData/save.bin";
 #elif UNITY_STANDALONE
-        dataPath = Application.dataPath + "/../SaveDatas/save.bin";
+        dataPath = Application.dataPath + "/../SaveData/save.bin";
 #endif
 
         if (File.Exists(dataPath))
@@ -95,9 +95,9 @@ public class GameData
     {
         string dataPath = null;
 #if UNITY_EDITOR
-        dataPath = Application.dataPath + "/SaveDatas/save.bin";
+        dataPath = Application.dataPath + "/SaveData/save.bin";
 #elif UNITY_STANDALONE
-        dataPath = Application.dataPath + "/../SaveDatas/save.bin";
+        dataPath = Application.dataPath + "/../SaveData/save.bin";
 #endif
 
         return File.Exists(dataPath);
@@ -113,9 +113,9 @@ public class GameData
         // セーブデータ用ディレクトリがあるか確認、なければ作る
         string dirPath = null;
 #if UNITY_EDITOR
-        dirPath = Application.dataPath + "/SaveDatas";
+        dirPath = Application.dataPath + "/SaveData";
 #elif UNITY_STANDALONE
-            dirPath = Application.dataPath + "/../SaveDatas";
+            dirPath = Application.dataPath + "/../SaveData";
 #endif
 
         if (System.IO.Directory.Exists(dirPath) == false)
