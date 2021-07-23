@@ -28,12 +28,14 @@ public class GameOverManager : MonoBehaviour
         _gameData.StageNumber = 1;
         _gameData.PlayerStock = 3;
 
+        _gameData.Save();
+
         Observable
             .Timer(TimeSpan.FromMilliseconds(5000))
             .Subscribe(_ =>
             {
                 // さいしょから
-                SceneManager.LoadScene("IntroScene");
+                SceneManager.LoadScene("TitleScene");
             });
     }
 }

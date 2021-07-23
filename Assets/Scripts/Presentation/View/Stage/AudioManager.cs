@@ -67,4 +67,12 @@ public class AudioManager : MonoBehaviour
                 break;
         }
     }
+
+    /// <summary>
+    /// BGMを停止
+    /// </summary>
+    public void AudioStop()
+    {
+        _audioSource.Stop();
+    }
 }

@@ -37,13 +37,21 @@ public class StageManager : MonoBehaviour
         // 死亡時のイベント
         _player.GetComponent<PlayerPhysics>().Death.Subscribe(_ =>
         {
+            // 残機を減らす
+            _gameData.CutStock(1);
+
+            if (0 > _gameData.PlayerStock)
+            {
+                // ゲーム情報のリセット
+                _gameData.StageNumber = 1;
+                _gameData.PlayerStock = 3;
+            }
+            _gameData.Save();
+
             Observable
                 .Timer(TimeSpan.FromMilliseconds(2000))
                 .Subscribe(_ =>
                 {
-                    // 残機を減らす
-                    _gameData.CutStock(1);
-
                     if (0 > _gameData.PlayerStock)
                     {
                         // ゲームオーバー

@@ -128,6 +128,9 @@ public class PlayerPhysics : MonoBehaviour
                 // HPが0以下になったら死
                 if (0 >= _currentHP.Value)
                 {
+                    // BGMを停止
+                    _audioManager.AudioStop();
+
                     // 効果音
                     _audioManager.PlaySound(SoundType.Death);
                     gameObject.SetActive(false);
