@@ -154,6 +154,25 @@ public class PlayerPhysics : MonoBehaviour
                 }
             })
             .AddTo(this);
+
+        // ポーズ
+        this.UpdateAsObservable()
+            .Where(_ => Input.GetButtonDown("Pause"))
+            .Subscribe(_ =>
+            {
+                Debug.Log("うんこ");
+                if (Time.timeScale == 0)
+                {
+                    Time.timeScale = 1;
+                    _audioManager.PlaySound(SoundType.Pause);
+                }
+                else
+                {
+                    Time.timeScale = 0;
+                    _audioManager.PlaySound(SoundType.Pause);
+                }
+            })
+            .AddTo(this);
     }
 
     void FixedUpdate()

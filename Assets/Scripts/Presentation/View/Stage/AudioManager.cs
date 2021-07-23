@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum SoundType
 {
+    Pause,
     PlayerDamage,
     Weapon,
     EnemyDamage,
@@ -17,6 +18,8 @@ public enum SoundType
 /// </summary>
 public class AudioManager : MonoBehaviour
 {
+    // ポーズ音
+    [SerializeField] private AudioClip _pauseSound;
     // ダメージ音
     [SerializeField] private AudioClip _playerDamageSound;
     // ショット音
@@ -48,6 +51,9 @@ public class AudioManager : MonoBehaviour
     {
         switch (type)
         {
+            case SoundType.Pause:
+                _audioSource.PlayOneShot(_pauseSound);
+                break;
             case SoundType.PlayerDamage:
                 _audioSource.PlayOneShot(_playerDamageSound);
                 break;
