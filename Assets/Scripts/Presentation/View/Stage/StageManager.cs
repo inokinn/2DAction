@@ -2,12 +2,15 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UniRx;
+using Zenject;
 
 /// <summary>
 /// ステージのマネージャクラス
 /// </summary>
 public class StageManager : MonoBehaviour
 {
+    // ゲーム情報
+    [Inject] private GameData _gameData;
     // プレイヤーのゲームオブジェクト
     [SerializeField] private GameObject _player;
     // 接地判定用のゲームオブジェクト
@@ -38,8 +41,19 @@ public class StageManager : MonoBehaviour
                 .Timer(TimeSpan.FromMilliseconds(2000))
                 .Subscribe(_ =>
                 {
-                    // リスタート
-                    SceneManager.LoadScene("SampleScene");
+                    // 残機を減らす
+                    _gameData.CutStock(1);
+
+                    if (0 > _gameData.PlayerStock)
+                    {
+                        // ゲームオーバー
+                        SceneManager.LoadScene("GameOverScene");
+                    }
+                    else
+                    {
+                        // リスタート
+                        SceneManager.LoadScene("IntroScene");
+                    }
                 });
         })
         .AddTo(this);
