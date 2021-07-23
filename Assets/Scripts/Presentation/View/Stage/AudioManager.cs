@@ -8,6 +8,7 @@ public enum SoundType
     Weapon,
     EnemyDamage,
     Death,
+    GameOver,
 }
 
 
@@ -24,6 +25,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip _enemyDamageSound;
     // 死亡時音
     [SerializeField] private AudioClip _deathSound;
+    // ゲームオーバー音
+    [SerializeField] private AudioClip _gameOverSound;
 
     // オーディオソース
     private AudioSource _audioSource;
@@ -56,6 +59,9 @@ public class AudioManager : MonoBehaviour
                 break;
             case SoundType.Death:
                 _audioSource.PlayOneShot(_deathSound);
+                break;
+            case SoundType.GameOver:
+                _audioSource.PlayOneShot(_gameOverSound);
                 break;
             default:
                 break;
