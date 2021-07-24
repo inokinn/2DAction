@@ -10,6 +10,7 @@ public enum SoundType
     EnemyDamage,
     Death,
     GameOver,
+    StageClear,
 }
 
 
@@ -30,6 +31,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip _deathSound;
     // ゲームオーバー音
     [SerializeField] private AudioClip _gameOverSound;
+    // ステージクリア音
+    [SerializeField] private AudioClip _stageClearSound;
 
     // オーディオソース
     private AudioSource _audioSource;
@@ -68,6 +71,9 @@ public class AudioManager : MonoBehaviour
                 break;
             case SoundType.GameOver:
                 _audioSource.PlayOneShot(_gameOverSound);
+                break;
+            case SoundType.StageClear:
+                _audioSource.PlayOneShot(_stageClearSound);
                 break;
             default:
                 break;

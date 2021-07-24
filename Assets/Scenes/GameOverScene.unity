@@ -443,6 +443,7 @@ MonoBehaviour:
   _enemyDamageSound: {fileID: 8300000, guid: d8abaca8861a09a4889f46c7618b69ed, type: 3}
   _deathSound: {fileID: 8300000, guid: add05203b0f26bf4e88174e7b633cb71, type: 3}
   _gameOverSound: {fileID: 8300000, guid: 334434d9d8bdab148b762e0e2ff0f1ea, type: 3}
+  _stageClearSound: {fileID: 8300000, guid: a97077bed8b375d41a4b080ebcb93ed1, type: 3}
 --- !u!82 &340081950
 AudioSource:
   m_ObjectHideFlags: 0

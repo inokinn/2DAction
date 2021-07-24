@@ -67,5 +67,24 @@ public class StageManager : MonoBehaviour
                 });
         })
         .AddTo(this);
+
+        // 死亡時のイベント
+        _player.GetComponent<PlayerPhysics>().Clear.Subscribe(_ =>
+        {
+            Observable
+                .Timer(TimeSpan.FromMilliseconds(5000))
+                .Subscribe(_ =>
+                {
+                    // ゲーム情報の更新
+                    if (_gameData.StageNumber < 2)
+                    {
+                        _gameData.StageNumber += 1;
+                        _gameData.Save();
+                        SceneManager.LoadScene("IntroScene");
+                    }
+                });
+
+        })
+        .AddTo(this);
     }
 }

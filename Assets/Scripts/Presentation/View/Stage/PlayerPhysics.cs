@@ -23,6 +23,9 @@ public class PlayerPhysics : MonoBehaviour
         get => _MaxHP;
     }
 
+    // 画面端(左上)
+    [SerializeField]
+    public Vector3 _leftTop = new Vector3(0, 4.9f, 13);
     // 移動速度
     [SerializeField] private float _speed = 0.1f;
     // ジャンプ時に上方向に掛かる力の強さ
@@ -69,6 +72,10 @@ public class PlayerPhysics : MonoBehaviour
     private Subject<bool> _deathSubject = new Subject<bool>();
     // 死のイベント購読側
     public IObservable<bool> Death => _deathSubject;
+    // クリアを通知するSubject
+    private Subject<bool> _clearSubject = new Subject<bool>();
+    // クリアのイベント購読側
+    public IObservable<bool> Clear => _clearSubject;
 
     // Start is called before the first frame update
     void Start()
@@ -155,12 +162,28 @@ public class PlayerPhysics : MonoBehaviour
             })
             .AddTo(this);
 
+        // クリアイベント
+        _playerView.GetComponent<PlayerView>().OnTriggerStayAsObservable()
+            .Where(other => other.gameObject.tag == "ClearFlag")
+            .Subscribe(other =>
+            {
+                // BGMを停止
+                _audioManager.AudioStop();
+
+                // 効果音
+                _audioManager.PlaySound(SoundType.StageClear);
+                gameObject.SetActive(false);
+
+                // クリアを通知
+                _clearSubject.OnNext(true);
+            })
+            .AddTo(this);
+
         // ポーズ
         this.UpdateAsObservable()
             .Where(_ => Input.GetButtonDown("Pause"))
             .Subscribe(_ =>
             {
-                Debug.Log("うんこ");
                 if (Time.timeScale == 0)
                 {
                     Time.timeScale = 1;
@@ -189,11 +212,16 @@ public class PlayerPhysics : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float addX = _speed * x;
 
+        Vector3 currentPosition = transform.position;
+
         // キー入力に合わせてキャラクターを移動する
         Vector3 newPosition = transform.position + (new Vector3(addX, 0, 0) * Time.deltaTime);
         if (!_isDamage)
         {
-            _rigitBody.MovePosition(newPosition);
+            if (newPosition.x - 3.5f >= _leftTop.x)
+            {
+                _rigitBody.MovePosition(newPosition);
+            }
         }
         _animator.SetBool("walking", addX != 0);
         // 移動する方向に顔を向ける
