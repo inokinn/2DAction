@@ -64,6 +64,8 @@ public class PlayerPhysics : MonoBehaviour
     private GameObject _mesh2;
     // ダメージ中
     private bool _isDamage = false;
+    // ポーズ中
+    private bool _isPausing = false;
 
     // 現在HP
     private ReactiveProperty<int> _currentHP = new ReactiveProperty<int>();
@@ -106,7 +108,7 @@ public class PlayerPhysics : MonoBehaviour
         this.UpdateAsObservable()
             .Where(_ => Input.GetButtonDown("Jump"))
             .Where(_ => _isGround)
-            .Where(_ => !_isDamage)
+            .Where(_ => !_isDamage && !_isPausing)
             .ThrottleFirst(new System.TimeSpan(100 * TimeSpan.TicksPerMillisecond))
             .Subscribe(_ =>
             {
@@ -117,7 +119,7 @@ public class PlayerPhysics : MonoBehaviour
         // 攻撃ボタンの入力
         this.UpdateAsObservable()
             .Where(_ => Input.GetButtonDown("Fire1"))
-            .Where(_ => !_isDamage)
+            .Where(_ => !_isDamage && !_isPausing)
             .ThrottleFirst(new System.TimeSpan(300 * TimeSpan.TicksPerMillisecond))
             .Subscribe(_ =>
             {
@@ -181,11 +183,13 @@ public class PlayerPhysics : MonoBehaviour
             {
                 if (Time.timeScale == 0)
                 {
+                    _isPausing = false;
                     Time.timeScale = 1;
                     _audioManager.PlaySound(SoundType.Pause);
                 }
                 else
                 {
+                    _isPausing = true;
                     Time.timeScale = 0;
                     _audioManager.PlaySound(SoundType.Pause);
                 }
