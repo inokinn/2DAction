@@ -25,7 +25,10 @@ public class PlayerPhysics : MonoBehaviour
 
     // 画面端(左上)
     [SerializeField]
-    public Vector3 _leftTop = new Vector3(0, 4.9f, 13);
+    public Vector3 _leftTop = new Vector3(0, 9.3f, 13);
+    // 画面端(左上)
+    [SerializeField]
+    public Vector3 _rightBottom = new Vector3(52, -4.5f, 13);
     // 移動速度
     [SerializeField] private float _speed = 0.1f;
     // ジャンプ時に上方向に掛かる力の強さ
@@ -135,15 +138,7 @@ public class PlayerPhysics : MonoBehaviour
                 // HPが0以下になったら死
                 if (0 >= _currentHP.Value)
                 {
-                    // BGMを停止
-                    _audioManager.AudioStop();
-
-                    // 効果音
-                    _audioManager.PlaySound(SoundType.Death);
-                    gameObject.SetActive(false);
-
-                    // 死を通知
-                    _deathSubject.OnNext(true);
+                    this.DeathEffect();
                 }
                 // HPが1以上あるならダメージエフェクト
                 else
@@ -202,6 +197,36 @@ public class PlayerPhysics : MonoBehaviour
     {
         // 入力による操作
         this.Run();
+
+        // 落下死してないか確認
+        this.PublishFall();
+    }
+
+    /// <summary>
+    /// 落下死をチェックし、死んだら通知
+    /// </summary>
+    private void PublishFall()
+    {
+        if (_rigitBody.position.y <= _rightBottom.y - 2)
+        {
+            this.DeathEffect();
+        }
+    }
+
+    /// <summary>
+    /// 死亡時エフェクト
+    /// </summary>
+    private void DeathEffect()
+    {
+        // BGMを停止
+        _audioManager.AudioStop();
+
+        // 効果音
+        _audioManager.PlaySound(SoundType.Death);
+        gameObject.SetActive(false);
+
+        // 死を通知
+        _deathSubject.OnNext(true);
     }
 
     /// <summary>
@@ -218,7 +243,7 @@ public class PlayerPhysics : MonoBehaviour
         Vector3 newPosition = transform.position + (new Vector3(addX, 0, 0) * Time.deltaTime);
         if (!_isDamage)
         {
-            if (newPosition.x - 3.5f >= _leftTop.x)
+            if (newPosition.x - 3.5f >= _leftTop.x && newPosition.x + 3.0f <= _rightBottom.x)
             {
                 _rigitBody.MovePosition(newPosition);
             }
