@@ -213,6 +213,9 @@ public class PlayerPhysics : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 死亡時エフェクト
+    /// </summary>
     private void DeathEffect()
     {
         // BGMを停止
