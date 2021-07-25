@@ -2487,7 +2487,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 987fa1d2f8118b14cba1e584f68c8ff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _leftTop: {x: 0, y: 4.9, z: 13}
+  _leftTop: {x: 0, y: 9.3, z: 13}
+  _rightBottom: {x: 54, y: -4.5, z: 13}
   _speed: 6
   _jumpPower: 400
   _invincibleTime: 1500

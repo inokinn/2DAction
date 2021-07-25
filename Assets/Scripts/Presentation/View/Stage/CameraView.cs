@@ -27,15 +27,18 @@ public class CameraView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // 画面の左上
-        Debug.Log(_camera.ViewportToWorldPoint(new Vector3(0, 0, 12)));
-        Debug.Log(_camera.ViewportToWorldPoint(new Vector3(1, 1, 12)));
-
         Vector3 currentPos = gameObject.transform.position;
         gameObject.transform.position = new Vector3(_player.transform.position.x, _player.transform.position.y + 2f, _player.transform.position.z - _CameraDistance);
-        if (_camera.ViewportToWorldPoint(new Vector3(0, 0, 12)).x <= _playerPhisics._leftTop.x)
+        float newX = gameObject.transform.position.x;
+        if (_camera.ViewportToWorldPoint(new Vector3(0, 1, 12)).x <= _playerPhisics._leftTop.x || _camera.ViewportToWorldPoint(new Vector3(1, 0, 12)).x >= _playerPhisics._rightBottom.x)
         {
-            gameObject.transform.position = new Vector3(currentPos.x, gameObject.transform.position.y, gameObject.transform.position.z);
+            newX = currentPos.x;
         }
+        float newY = gameObject.transform.position.y;
+        if (_camera.ViewportToWorldPoint(new Vector3(0, 1, 12)).y >= _playerPhisics._leftTop.y || _camera.ViewportToWorldPoint(new Vector3(1, 0, 12)).y <= _playerPhisics._rightBottom.y)
+        {
+            newY = currentPos.y;
+        }
+        gameObject.transform.position = new Vector3(newX, newY, gameObject.transform.position.z);
     }
 }
